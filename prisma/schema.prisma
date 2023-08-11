@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Ability {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  isPassive Boolean
+  ownerId   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  character Character @relation(fields: [ownerId], references: [id], map: "Ability_ownerId_fkey")
+
+  @@index([ownerId], map: "Ability_ownerId_fkey")
+}
+
+model Character {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  abilities Ability[]
+}
